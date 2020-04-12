@@ -78,7 +78,7 @@
 
                     <section class="mb-5" v-for="section in estimateData.sections" :key="section.id">
                         <p v-html="section.presentable_text"></p>
-                        
+
                         <div class="table-responsive">
                             <table class="table mt-4 p-sm-2 p-md-0" v-if="section.items.length">
                                 <tr>
@@ -102,9 +102,23 @@
                             </table>
                         </div>
                     </section>
+
+                    <section class="mb-5" v-if="estimateData.use_name_as_title">
+                        <hr />
+                        Prepared By: Ashish Srivastava <br>
+                        Email: ashish@bluelupin.com<br>
+                        Phone/WhatsApp: +91-9899245495<br>
+                         <!-- Last Updated On: {{currentDate}} -->
+                         <a href="https://www.bluelupin.com" target="_blank">Bluelupin Technologies Private Limited</a></span>
+
+                    </section>
                 </div>
+
             </div>
+
         </div>
+
+
     </main>
 </template>
 
@@ -118,6 +132,7 @@ export default {
             shareEmail: '',
             sendingEmail: false,
             estimateData: null,
+            currentDate: '',
         }
     },
 
@@ -127,6 +142,8 @@ export default {
     },
 
     mounted() {
+        //this.currentDate = new Date().toJSON().slice(0,10).replace(/-/g,'/');
+        this.currentDate = new Date().toLocaleString();
         this.init();
     },
 
@@ -136,7 +153,7 @@ export default {
             if(!this.estimateData.sections) return 0;
 
             let total = this.estimateData.sections.reduce((sum, section) => {
-                return sum + this.sectionTotal(section, false); 
+                return sum + this.sectionTotal(section, false);
             }, 0);
 
             return total;
@@ -144,9 +161,9 @@ export default {
 
         estimateTotalSelectedPrice() {
             if(!this.estimateData.sections) return 0;
-            
+
             let total = this.estimateData.sections.reduce((sum, section) => {
-                return sum + this.sectionTotal(section, true); 
+                return sum + this.sectionTotal(section, true);
             }, 0);
 
             return total;
@@ -159,7 +176,7 @@ export default {
         init() {
             axios.get('/estimates/' + this.estimate + '/data').then(({data}) => {
                 this.estimateData = this.treatData(data);
-                
+
                 this.$nextTick(() => {
                     this.renderPrices();
                 })
@@ -168,12 +185,12 @@ export default {
 
         treatData(data) {
             data.sections = data.sections.map(section => {
-                
-                section.items = section.items.map(item => { 
+
+                section.items = section.items.map(item => {
                     item.selected = true ;
                     return item;
                 });
-                
+
                 return section;
             });
 
@@ -188,7 +205,7 @@ export default {
                     itemPrice = !item.selected ? 0 : itemPrice;
                 }
 
-                return sum + itemPrice; 
+                return sum + itemPrice;
             }, 0);
 
             return parseFloat(total);
@@ -198,7 +215,7 @@ export default {
             let currencySettings = this.estimateData.currency_settings;
 
             return currencySettings.symbol + ' ' + formatMoney(
-                price, 2, 
+                price, 2,
                 currencySettings.decimal_separator,
                 currencySettings.thousands_separator,
             ).toString();
@@ -258,7 +275,7 @@ export default {
             let container = document.getElementById('printContainer'),
                 estimate = document.getElementById('estimateDocument'),
                 mainElement = document.getElementById('estimateMainSection');
-            
+
             container.classList.remove('container');
             container.classList.add('container-fluid');
             estimate.classList.add('col');
@@ -272,7 +289,7 @@ export default {
             let container = document.getElementById('printContainer'),
                 estimate = document.getElementById('estimateDocument'),
                 mainElement = document.getElementById('estimateMainSection');
-            
+
             container.classList.add('container');
             container.classList.remove('container-fluid');
             estimate.classList.remove('col');

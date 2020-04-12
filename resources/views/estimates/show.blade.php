@@ -31,11 +31,13 @@
 </head>
 <body>
     <div id="app">
-        <estimate-viewer-component 
+        <estimate-viewer-component
             estimate="{{ $estimate->id }}"
             :can-share-email="{{ isset($canShareEmail) ? json_encode($canShareEmail) : 'false'}}"
         ></estimate-viewer-component>
+
     </div>
+
 
     <script src="https://unpkg.com/ionicons@5.0.0/dist/ionicons.js"></script>
 
